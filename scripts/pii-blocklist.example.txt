@@ -1,0 +1,9 @@
+# Copy this file to the repo root as ".pii-blocklist.local.txt" and fill in the REAL terms.
+# That file is listed in .gitignore, so the sensitive words stay on THIS machine only
+# and are used solely by security-scan.ps1 to block accidental commits.
+# One term per line. Lines starting with # are ignored. Substring match.
+#
+# <你的公司 / 品牌实名>
+# <在售车型名 / 内部产品名>
+# <内部项目代号 / 系统真名>
+# <合作方国别 / 具体雇主线索>
