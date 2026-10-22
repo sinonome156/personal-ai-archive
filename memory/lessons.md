@@ -39,8 +39,22 @@
   触发场景：本机 git push/pull 报 "Could not connect"。
   代价/收益：避免误判"永久被墙"去走 UAC/代理等重方案。
 
+- [2026-10-23] 公开仓库隐私清除必须"连历史一起"：改掉当前文件≠消除泄露，旧 commit 永久可检索。最干净是删库重建；`gh repo delete` 需 `delete_repo` scope（设备码默认不含），且 `gh auth refresh` 非交互环境驱动不了 → 直接让用户在网页 Settings→Danger Zone 手动删除最快。删后验证旧 SHA 在远程返回 "No commit found" 才算清除。
+  触发场景：任何"清理已入库敏感信息"的任务。
+  代价/收益：只改 tip 会留下可被全网翻出的历史。
+- [2026-10-23] 自建 PII/凭据 pre-commit 扫描器会"自伤"：把禁用词示例写进红线文档、把凭据特征写进 README，都会被自己拦下。真实词表只放 gitignored 的本地文件（`.pii-blocklist.local.txt`），文档用中性措辞，通用 key=value 正则收紧到"12+ 位真实凭据形态"。
+  触发场景：编写仓库自检/密钥扫描钩子。
+  代价/收益：误拦导致提交中断、模块化提交被打乱。
+- [2026-10-23] 钩子拦一次后继续 `git commit` 会把全部已暂存文件并进一个 mega 提交 → 破坏"一次提交一类事"。重写历史时用 `git rm -r --cached .` 清空索引后再逐组 `git add`+commit。
+  触发场景：分支保护/orphan 重建历史。
+  代价/收益：失去按目录精确回退能力。
+- [2026-10-23] 全历史扫描命中可能全来自未更新的远程跟踪分支（origin/main 指旧污染），核验命中要限定 `HEAD` 或新分支，别被旧 ref 误导。
+  触发场景：用 `git rev-list --all` 做敏感串核验。
+  代价/收益：误判"没清除干净"。
+
 ## 方法论沉淀（成体系的）
 
 > 单条教训不足以成体系时，在此登记完整方法名的指引（正文可拆分出 `lessons/` 子目录）。
 
 - GitHub 个人档案仓库 Bootstrap 全流程（建仓→授权→推送→分支保护→预填审阅→访谈补齐）→ 已沉淀为本机 skill `github-personal-archive-bootstrap`，下条同类指令直接复用。
+- 公开仓库隐私防护三件套：① 写回前跑 `scripts/security-scan.ps1` 自检；② 雇主真实词只存 gitignored 本地名单；③ 一旦泄露走"删库重建/强推 + 旧 SHA 404 验证 + 本地 gc"彻底清除。→ 详见 AGENTS.md 第 4 节。
