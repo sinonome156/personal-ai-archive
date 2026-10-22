@@ -1,0 +1,21 @@
+# 本地审阅清单（不进公开仓库）
+PREFILL-REVIEW.md
+
+# 本地机密扫描词表（含雇主实名，仅供 scripts/security-scan.ps1 拦截用，绝不入库）
+.pii-blocklist.local.txt
+
+# 临时文件与本机环境
+*.tmp
+*.bak
+~$*
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# 绝不允许入库的机密（最后一道防线）
+.env
+*.key
+*.pem
+*token*
+*password*
+credentials*
